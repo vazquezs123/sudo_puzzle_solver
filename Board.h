@@ -11,10 +11,11 @@ private:
 public:
 	BOARD();
 	void newBoard();
-	bool isValidRow(int board[][9], int row);
-	void initializeBoard(int board[][9]);
-	void fillRow(int bord[][9], int row);
-	bool isValidCol(int board[][9], int row);
+	bool isValidRow(int row);
+	void initializeBoard();
+	void fillRow(int row);
+	bool isValidCol(int row);
+	void printBoard();
 };
 
 #endif

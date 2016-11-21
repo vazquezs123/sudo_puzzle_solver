@@ -13,7 +13,7 @@ BOARD::BOARD()
 // by inputting numbers one row at a time
 /////////////////////////////////////////////////
 void BOARD::newBoard() {
-	initializeBoard(board);
+	initializeBoard();
 	std::cout << "Empty Boxes should be inputted as 0. " << std::endl;
 	std::cout << "When entering rows, please follow this exapmle format " << std::endl;
 	std::cout << "0 2 1 0 0 3 0 0 9" << std::endl;
@@ -22,14 +22,28 @@ void BOARD::newBoard() {
 		
 		// get user row and check if valid row if not ask for new row
 		int j = 0;
-		fillRow(board, i);
-		while (!isValidRow(board, i) && !isValidCol(board,i)) {
-			fillRow(board, i);
+		fillRow(i);
+		while (!isValidRow(i) && !isValidCol(i)) {
+			fillRow(i);
 		}
 	}
 }
 
-void BOARD::fillRow(int bord[][9], int row) {
+/////////////////////////////
+// function to print board
+/////////////////////////////
+void BOARD::printBoard() {
+	std::cout << "------------------------------" << std::endl;
+	for (int i = 0; i < 9; i++) {
+		std::cout << "|";
+		for (int j = 0; j < 9; j++) {
+			std::cout << board[i][j] << "|";
+		}
+	}
+	std::cout << "------------------------------" << std::endl;
+}
+
+void BOARD::fillRow(int row) {
 	// input row
 	std::cout << "Please inpute row: " << row << std::endl;
 	for (int j = 0; j < 9; j++) {
@@ -40,7 +54,7 @@ void BOARD::fillRow(int bord[][9], int row) {
 }
 
 
-void BOARD::initializeBoard(int board[][9]) {
+void BOARD::initializeBoard() {
 	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 9; j++) {
 			board[i][j] = -1;
@@ -51,7 +65,7 @@ void BOARD::initializeBoard(int board[][9]) {
 ////////////////////////////////////////
 //  function to test if row is valid
 ////////////////////////////////////////
-bool BOARD::isValidRow(int board[][9], int row) {
+bool BOARD::isValidRow(int row) {
 	
 
 	for (int i = 0; i < 9; i++) {
@@ -80,7 +94,7 @@ bool BOARD::isValidRow(int board[][9], int row) {
 ////////////////////////////////////////
 //  function to test if col is valid
 ////////////////////////////////////////
-bool BOARD::isValidCol(int board[][9], int row) {
+bool BOARD::isValidCol(int row) {
 	// check for duplicates
 	for (int j = 0; j < 9; j++) {
 		int tempN = board[row][j];
