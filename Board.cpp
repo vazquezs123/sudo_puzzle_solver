@@ -14,6 +14,7 @@ BOARD::BOARD()
 /////////////////////////////////////////////////
 void BOARD::newBoard() {
 	initializeBoard();
+	initializeSections();
 	std::cout << "Empty Boxes should be inputted as 0. " << std::endl;
 	std::cout << "When entering rows, please follow this exapmle format " << std::endl;
 	std::cout << "0 2 1 0 0 3 0 0 9" << std::endl;
@@ -21,26 +22,27 @@ void BOARD::newBoard() {
 	for (int i = 0; i < 9; i++) {
 		
 		// get user row and check if valid row if not ask for new row
-		int j = 0;
 		fillRow(i);
-		while (!isValidRow(i) && !isValidCol(i)) {
+		while (!isValidRow(i) || !isValidCol(i)) {
 			fillRow(i);
 		}
 	}
+	fillSections();
 }
 
 /////////////////////////////
 // function to print board
 /////////////////////////////
 void BOARD::printBoard() {
-	std::cout << "------------------------------" << std::endl;
+	std::cout << "-------------------" << std::endl;
 	for (int i = 0; i < 9; i++) {
 		std::cout << "|";
 		for (int j = 0; j < 9; j++) {
 			std::cout << board[i][j] << "|";
 		}
+		std::cout << std::endl;
 	}
-	std::cout << "------------------------------" << std::endl;
+	std::cout << "-------------------" << std::endl;
 }
 
 void BOARD::fillRow(int row) {
@@ -62,11 +64,43 @@ void BOARD::initializeBoard() {
 	}
 }
 
+void BOARD::initializeSections() {
+	for (int i = 0; i < 9; i++) {
+		section1[i] = -1;
+		section2[i] = -1;
+		section3[i] = -1;
+		section4[i] = -1;
+		section5[i] = -1;
+		section6[i] = -1;
+		section7[i] = -1;
+		section8[i] = -1;
+		section9[i] = -1;
+	}
+}
+
+void BOARD::printSections() {
+	printSection(section1);
+	printSection(section2);
+	printSection(section3);
+	printSection(section4);
+	printSection(section5);
+	printSection(section6);
+	printSection(section7);
+	printSection(section8);
+	printSection(section9);
+}
+
+void BOARD::printSection(int section[]) {
+	for (int i = 0; i < 9; i++) { 
+		std::cout << section[i] << " ";
+	}
+	std::cout << std::endl;
+}
+
 ////////////////////////////////////////
 //  function to test if row is valid
 ////////////////////////////////////////
 bool BOARD::isValidRow(int row) {
-	
 
 	for (int i = 0; i < 9; i++) {
 		int tempN = board[row][i];
@@ -74,8 +108,11 @@ bool BOARD::isValidRow(int row) {
 		// check for duplicates
 		for (int j = 0; j < 9; j++) {
 			// make sure not looking at same cell
-			if (tempN == board[row][j] && i != j && tempN != 0) { // there is a duplicate
-				std::cout << "Duplicate at row: " << row << " col: " << j + 1 << std::endl;
+			if (tempN == board[row][j] && i != j && tempN > 0) { // there is a duplicate
+				std::cout << "Duplicate in row: " << row << std::endl;
+				std::cout << "n: " << tempN << std::endl; ////####
+				std::cout << "board" << board[row][j] << std::endl;
+				std::cout << "i: "<< i << " j: " << j << std::endl;
 				return false;
 			}
 		}
@@ -98,13 +135,112 @@ bool BOARD::isValidCol(int row) {
 	// check for duplicates
 	for (int j = 0; j < 9; j++) {
 		int tempN = board[row][j];
-		for (int i = row; i >= 0; i--) {
+		for (int i = row; i >= 0; i--) { // i in this loop acts as aa column index
 			// make sure not looking at same cell
-			if (tempN == board[i][j] && i != j && tempN != 0 && tempN != -1) { // there is a duplicate
-				std::cout << "Duplicate at row: " << row << " col: " << j + 1 << std::endl;
+			if (tempN == board[row][i] && i != j && tempN > 0) { // there is a duplicate
+				std::cout << "Duplicate in col: " << j + 1 << std::endl;
+				std::cout << "n: " << tempN << std::endl;
 				return false;
 			}
 		}
 	}
 	return true;
+}
+
+///////////////////////////////////////////
+//  function to fill sections of board
+////////////////////////////////////////////
+void BOARD::fillSections() {
+	// initialize traversal index for each section
+	int ind1 = 0, ind2 = 0, ind3 = 0, ind4 = 0, ind5 = 0, ind6 = 0, ind7 = 0, ind8 = 0, ind9 = 0;
+
+	// fill sections
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			if (i == 0) {
+				section1[ind1] = board[i][j];
+				ind1++;
+			}
+			else if (i == 1) {
+				section2[ind2] = board[i][j];
+				ind2++;
+			}
+			else if (i == 2) {
+				section3[ind3] = board[i][j];
+				ind3++;
+			}
+			else if (i == 3) {
+				section4[ind4] = board[i][j];
+				ind4++;
+			}
+			else if (i == 4) {
+				section5[ind5] = board[i][j];
+				ind5++;
+			}
+			else if (i == 5) {
+				section6[ind6] = board[i][j];
+				ind6++;
+			}
+			else if (i == 6) {
+				section7[ind7] = board[i][j];
+				ind7++;
+			}
+			else if (i == 7) {
+				section8[ind8] = board[i][j];
+				ind8++;
+			}
+			else if (i == 8) {
+				section9[ind9] = board[i][j];
+				ind9++;
+			}
+		}
+	}
+	/*
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++){
+			if ((i == 0 || i == 1 || i == 2) && (j == 0 || j == 1 || j == 2)) { 
+				section1[ind1] = board[i][j]; 
+				ind1++;
+			}
+			if ((i == 0 || i == 1 || i == 2) && (j == 3 || j == 4 || j == 5)) { 
+				section2[i] = board[ind2][j]; 
+				ind2++;
+			}
+			if ((i == 0 || i == 1 || i == 2) && (j == 6 || j == 7 || j == 8)) {
+				section3[i] = board[ind3][j]; 
+				ind3++;
+			}
+			if ((i == 3 || i == 4 || i == 5) && (j == 0 || j == 1 || j == 2)) { 
+				section4[i] = board[ind4][j]; 
+				ind4++;
+			}
+			if ((i == 3 || i == 4 || i == 5) && (j == 3 || j == 4 || j == 5)) { 
+				section5[ind5] = board[i][j]; 
+				ind5++;
+			}
+			if ((i == 3 || i == 4 || i == 5) && (j == 6 || j == 7 || j == 8)) { 
+				section6[ind6] = board[i][j]; 
+				ind6++;
+			}
+			if ((i == 6 || i == 7 || i == 8) && (j == 0 || j == 1 || j == 2)) { 
+				section7[ind7] = board[i][j]; 
+				ind7++;
+			}
+			if ((i == 6 || i == 7 || i == 8) && (j == 3 || j == 4 || j == 5)) { 
+				section8[ind8] = board[i][j]; 
+				ind8++;
+			}
+			if ((i == 6 || i == 7 || i == 8) && (j == 6 || j == 7 || j == 8)) { 
+				section9[ind9] = board[i][j]; 
+				ind9++;
+			}
+		}
+	}
+	*/
+}
+
+void BOARD::solveBoard() {
+	// win condition
+
+	
 }
