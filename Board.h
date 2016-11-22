@@ -30,6 +30,8 @@ public:
 	void solveBoard();
 	void printSections(); // print all sections
 	void printSection(int section[]);  // print single section
+	bool allRowsValid();
+	bool allColsValid();
 
 };
 

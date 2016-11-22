@@ -32,11 +32,11 @@ int main() {
 		}
 	}
 
-	// board is no filled with supposed correct board
-
-	myboard.printSections();
+	// board is now filled with supposed correct board
+	std::cout << "Solving the below board: " << std::endl;
 	myboard.printBoard();
 
+	std::cout << myboard.allRowsValid() << myboard.allColsValid() << std::endl;
 
 
 	return 0;
