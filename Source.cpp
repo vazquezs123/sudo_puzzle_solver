@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <string>
 #include "Board.h"
 
@@ -13,13 +12,13 @@ int main() {
 	// ensure board is correct
 	std::cout << "Is this the board you wish to solve? Please answer 'yes' or 'no' : " << std::endl;
 	std::cin >> userResponse;
-	
+
 	// get valid response
 	while (!isValidResponse(userResponse)) {
 		std::cout << "Invalid response. Please enter 'yes' or 'no' : " << std::endl;
 		std::cin >> userResponse;
 	}
-	while ( userResponse == "no") {
+	while (userResponse == "no") {
 		myboard.newBoard();
 		// ensure board is correct
 		std::cout << "Is this the board you wish to solve? Please answer 'yes' or 'no' : " << std::endl;
@@ -35,10 +34,20 @@ int main() {
 	// board is now filled with supposed correct board
 	std::cout << "Solving the below board: " << std::endl;
 	myboard.printBoard();
+	myboard.getCellList();
+	//myboard.printCellList();
 
-	std::cout << myboard.allRowsValid() << myboard.allColsValid() << std::endl;
+	// solve board
+	/*
+	while (!myboard.winCase()) {
+		myboard.solveBoard();
+	}
 
-
+	if (myboard.winCase()) {
+		std::cout << "Below is the solved board: " << std::endl;
+		myboard.printBoard();
+	}
+	*/
 	return 0;
 }
 
