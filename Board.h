@@ -10,7 +10,7 @@ struct Cell{
 	int col;
 	int value;
 	std::vector<int> potentialNums;
-	int isFilled = false;
+	bool isFilled = false;
 };
 
 class BOARD
@@ -27,7 +27,6 @@ private:
 	int section7[9];
 	int section8[9];
 	int section9[9];
-	std::vector<Cell> cellList;
 
 public:
 	BOARD();
@@ -56,7 +55,9 @@ public:
 	void appendToCellList(int row, int col, int n); // appends new element to cellList with row, col, and list of qualifying numbers
 	void getCellList(); // get list of potential numbers for every cell
 	void printCellList(); // print cellList
-	~BOARD();
+	bool sectionRowIsFilled(int row, int col);
+	bool sectionColIsFilled(int row, int col);
+	//~BOARD();
 
 };
 

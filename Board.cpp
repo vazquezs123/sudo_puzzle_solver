@@ -268,19 +268,18 @@ bool BOARD::allSectionsValid() {
 	return true;
 }
 
-/*
+
 void BOARD::printCellList(){
-	std::cout << "Printing Cell List: " << std::endl;
-	for (int i = 0; i < cellList.size(); i++) {
-		std::cout << "\nrow: " << cellList[i].row << std::endl;
-		std::cout << "col: " << cellList[i].col << std::endl;
-		std::cout << "Potential Numbers: ";
-		for (int j = 0; j < cellList[i].potentialNums.size(); j++) {
-			std::cout << cellList[i].potentialNums[j] << " ";
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			std::cout << "Cell (" << i << "," << j << ")" << " potential nums: " << std::endl;
+			for (int k = 0; k < board[i][j].potentialNums.size(); k++) {
+				board[i][j].potentialNums[k];
+			}
 		}
 	}
 }
-*/
+
 
 // cell class
 // have 2d of vector
@@ -298,9 +297,9 @@ void BOARD::appendToCellList(int row, int col, int n) {
 
 	//cellList.push_back(Cell());
 	//cellList[cellList.size() - 1].row = row;
-	//cellList[cellList.size() - 1].col = col;
-	//cellList[cellList.size() - 1].potentialNums.push_back(int());
-	//cellList[cellList.size() - 1].potentialNums[cellList[cellList.size() - 1].potentialNums.size() - 1] = n;
+//cellList[cellList.size() - 1].col = col;
+//cellList[cellList.size() - 1].potentialNums.push_back(int());
+//cellList[cellList.size() - 1].potentialNums[cellList[cellList.size() - 1].potentialNums.size() - 1] = n;
 }
 
 bool BOARD::winCase() {
@@ -316,7 +315,7 @@ void BOARD::getCellList() {
 	// check if each cell can be filled
 	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 9; j++) {
-			for (int k = 0; k < 9; k++) {
+			for (int k = 1; k <= 9; k++) {
 				// if current cell can be filled with k, do so
 				if (canBeFilled(i, j, k) && board[i][j].isFilled == false) {
 					board[i][j].value = k; // fill current cell with k
@@ -326,7 +325,7 @@ void BOARD::getCellList() {
 				}
 				else {
 					appendToCellList(i, j, k);
-					//std::cout << "Appending potential number: " << k << " to potential # list for row: " << i << " col: " << j << std::endl;
+					std::cout << "Appending potential number: " << k << " to cell at row: " << i << " col: " << j << std::endl;
 				}
 			}
 		}
@@ -335,63 +334,111 @@ void BOARD::getCellList() {
 
 // check if individual cell can be filled with numbers 1 - 9
 bool BOARD::canBeFilled(int row, int col, int k) {
+	std::cout << "row: " << row << " col: " << col << " n: " << k << std::endl;
 	// can fill condition for section 1; qualifying number not in row; qualifying number not in col; qualifying number (k) not in section; qualyfing number is in row: current row + 1 && current row + 2; qualifying number in current 
-	if (row >= 0 && row <= 2 && col >= 0 && col <= 2) { // condition for section 1
-		if (board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section1, k) && nInAdjRows(row, k) && nInAdjCols(col, k)) { // if true, it can be filled with k; i = current row, j = current col
-			return true;
-		}
+	if (row >= 0 && row <= 2 && col >= 0 && col <= 2 && board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section1, k) && ((nInAdjRows(row, k) && nInAdjCols(col, k)) || (nInAdjRows(row, k) && sectionRowIsFilled(row, col)) || (nInAdjCols(col, k) && sectionColIsFilled(row, col)))) { // condition for section 1
+			// if true, it can be filled with k; i = current row, j = current col
+		return true;
 	}
 	// can filll condition for section 2 fil
-	else if (row >= 0 && row <= 2 && col >= 3 && col <= 5) { // condition for section 2
-		if (board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section2, k) && nInAdjRows(row, k) && nInAdjCols(col, k)) { // if true, it can be filled with k; i = current row, j = current col
-			return true;
-		}
+	else if (row >= 0 && row <= 2 && col >= 3 && col <= 5 && board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section2, k) && ((nInAdjRows(row, k) && nInAdjCols(col, k)) || (nInAdjRows(row, k) && sectionRowIsFilled(row, col)) || (nInAdjCols(col, k) && sectionColIsFilled(row, col)))) { // condition for section 2
+			// if true, it can be filled with k; i = current row, j = current col
+		return true;
 	}
 	// can filll condition for section 3 fil
-	else if (row >= 0 && row <= 2 && col >= 6 && col <= 8) { // condition for section 3
-		if (board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section3, k) && nInAdjRows(row, k) && nInAdjCols(col, k)) { // if true, it can be filled with k; i = current row, j = current col
-			return true;
-		}
+	else if (row >= 0 && row <= 2 && col >= 6 && col <= 8 && board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section3, k) && ((nInAdjRows(row, k) && nInAdjCols(col, k)) || (nInAdjRows(row, k) && sectionRowIsFilled(row, col)) || (nInAdjCols(col, k) && sectionColIsFilled(row, col)))) { // condition for section 3
+			// if true, it can be filled with k; i = current row, j = current col
+		return true;
 	}
 	// can filll condition for section 4 fil
-	else if (row >= 3 && row <= 5 && col >= 0 && col <= 2) { // condition for section 4
-		if (board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section4, k) && nInAdjRows(row, k) && nInAdjCols(col, k)) { // if true, it can be filled with k; i = current row, j = current col
-			return true;
-		}
+	else if (row >= 3 && row <= 5 && col >= 0 && col <= 2 && board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section4, k) && ((nInAdjRows(row, k) && nInAdjCols(col, k)) || (nInAdjRows(row, k) && sectionRowIsFilled(row, col)) || (nInAdjCols(col, k) && sectionColIsFilled(row, col)))) { // condition for section 4
+			// if true, it can be filled with k; i = current row, j = current col
+		return true;
 	}
 	// can filll condition for section 5 fil
-	else if (row >= 3 && row <= 5 && col >= 3 && col <= 5) { // condition for section 5
-		if (board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section5, k) && nInAdjRows(row, k) && nInAdjCols(col, k)) { // if true, it can be filled with k; i = current row, j = current col
-			return true;
-		}
+	else if (row >= 3 && row <= 5 && col >= 3 && col <= 5 && board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section5, k) && ((nInAdjRows(row, k) && nInAdjCols(col, k)) || (nInAdjRows(row, k) && sectionRowIsFilled(row, col)) || (nInAdjCols(col, k) && sectionColIsFilled(row, col)))) { // condition for section 5
+			// if true, it can be filled with k; i = current row, j = current col
+		return true;
 	}
 	// can filll condition for section 6 fil
-	else if (row >= 3 && row <= 5 && col >= 6 && col <= 8) { // condition for section 6
-		if (board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section6, k) && nInAdjRows(row, k) && nInAdjCols(col, k)) { // if true, it can be filled with k; i = current row, j = current col
-			return true;
-		}
+	else if (row >= 3 && row <= 5 && col >= 6 && col <= 8 && board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section6, k) && ((nInAdjRows(row, k) && nInAdjCols(col, k)) || (nInAdjRows(row, k) && sectionRowIsFilled(row, col)) || (nInAdjCols(col, k) && sectionColIsFilled(row, col)))) { // condition for section 6
+			// if true, it can be filled with k; i = current row, j = current col
+		return true;
 	}
 	// can filll condition for section 7 fil
-	else if (row >= 6 && row <= 8 && col >= 0 && col <= 2) { // condition for section 7
-		if (board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section7, k) && nInAdjRows(row, k) && nInAdjCols(col, k)) { // if true, it can be filled with k; i = current row, j = current col
-			return true;
-		}
+	else if (row >= 6 && row <= 8 && col >= 0 && col <= 2 && board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section7, k) && ((nInAdjRows(row, k) && nInAdjCols(col, k)) || (nInAdjRows(row, k) && sectionRowIsFilled(row, col)) || (nInAdjCols(col, k) && sectionColIsFilled(row, col)))) { // condition for section 7
+			// if true, it can be filled with k; i = current row, j = current col
+		return true;
 	}
 	// can filll condition for section 8 fil
-	else if (row >= 6 && row <= 8 && col >= 3 && col <= 5) { // condition for section 8
-		if (board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section8, k) && nInAdjRows(row, k) && nInAdjCols(col, k)) { // if true, it can be filled with k; i = current row, j = current col
-			return true;
-		}
+	else if (row >= 6 && row <= 8 && col >= 3 && col <= 5 && board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section8, k) && ((nInAdjRows(row, k) && nInAdjCols(col, k)) || (nInAdjRows(row, k) && sectionRowIsFilled(row, col)) || (nInAdjCols(col, k) && sectionColIsFilled(row, col)))) { // condition for section 8
+			// if true, it can be filled with k; i = current row, j = current col
+		return true;
 	}
 	// can filll condition for section 9 fil
-	else if (row >= 6 && row <= 8 && col >= 6 && col <= 8) { // condition for section 9
-		if (board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section9, k) && nInAdjRows(row, k) && nInAdjCols(col, k)) { // if true, it can be filled with k; i = current row, j = current col
-			return true;
-		}
+	else if (row >= 6 && row <= 8 && col >= 6 && col <= 8 && board[row][col].value == 0 && !nInRow(row, k) && !nInCol(col, k) && !nInSection(section9, k) && ((nInAdjRows(row, k) && nInAdjCols(col, k)) || (nInAdjRows(row, k) && sectionRowIsFilled(row, col)) || (nInAdjCols(col, k) && sectionColIsFilled(row, col)))) { // condition for section 9
+			// if true, it can be filled with k; i = current row, j = current col
+		return true;
 	}
 	else {
-		std::cout << "Invalid cell from function canBeFilled() " << std::endl;
+		//std::cout << "Invalid cell from function canBeFilled() " << std::endl;
 		return false;
+	}
+}
+
+// checks if row of section of current cell is filled with other numbers valid numbers
+bool BOARD::sectionRowIsFilled(int row, int col) {
+	if (row == 0 || row == 3 || row == 6) {
+		if (board[row][col + 1].isFilled && board[row][col + 2].isFilled) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else if (row == 1 || row == 4 || row == 7) {
+		if (board[row][col - 1].isFilled && board[row][col + 1].isFilled){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else if (row == 2 || row == 5 || row == 8){
+		if (board[row][col - 1].isFilled && board[row][col - 2].isFilled) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+}
+
+// checks if col of section of current cell is filled with other numbers valid numbers
+bool BOARD::sectionColIsFilled(int row, int col) {
+	if (col == 0 || col == 3 || col == 6) {
+		if (board[row+1][col].isFilled && board[row+2][col].isFilled) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else if (row == 1 || row == 4 || row == 7) {
+		if (board[row - 1][col].isFilled && board[row + 1][col].isFilled) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else if (row == 2 || row == 5 || row == 8) {
+		if (board[row - 1][col].isFilled && board[row - 2][col].isFilled) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }
 
@@ -400,6 +447,7 @@ bool BOARD::nInRow(int row, int n) {
 	for (int j = 0; j < 9; j++) {
 		if (board[row][j].value == n) { return true; }
 	}
+	//std::cout << "ninrow row: " << row << std::endl;
 	return false;
 }
 
@@ -408,7 +456,7 @@ bool BOARD::nInCol(int col, int n) {
 	for (int i = 0; i < 9; i++) {
 		if (board[i][col].value == n) { return true; }
 	}
-
+	//std::cout << "ninrow col: " << col << std::endl;
 	return false;
 }
 
@@ -424,71 +472,28 @@ bool BOARD::nInSection(int section[], int n) {
 
 bool BOARD::nInAdjRows(int row, int n) {
 	// col 1 condition
-	if (row == 0) {
-		if (nInRow(row + 1, n) && nInRow(row + 2, n)) { return true; }
-	}
-	else if (row == 1) {
-		if (nInRow(row - 1, n) && nInRow(row + 1, n)) { return true; }
-	}
-	else if (row == 2) {
-		if (nInRow(row - 1, n) && nInRow(row - 2, n)) { return true; }
-	}
-	else if (row == 3) {
-		if (nInRow(row + 1, n) && nInRow(row + 2, n)) { return true; }
-	}
-	else if (row == 4) {
-		if (nInRow(row - 1, n) && nInRow(row + 1, n)) { return true; }
-	}
-	else if (row == 5) {
-		if (nInRow(row - 1, n) && nInRow(row - 2, n)) { return true; }
-	}
-	else if (row == 6) {
-		if (nInRow(row + 1, n) && nInRow(row + 2, n)) { return true; }
-	}
-	else if (row == 7) {
-		if (nInRow(row - 1, n) && nInRow(row + 1, n)) { return true; }
-	}
-	else if (row == 8) {
-		if (nInRow(row - 1, n) && nInRow(row - 2, n)) { return true; }
-	}
-	else {
-		return false;
-	}
+	if (nInRow(row + 1, n) && nInRow(row + 2, n) && row == 0) { return true; }
+	else if (nInRow(row - 1, n) && nInRow(row + 1, n) && row == 1) { return true; }
+	else if (nInRow(row - 1, n) && nInRow(row - 2, n) && row == 2) { return true; }
+	else if (nInRow(row + 1, n) && nInRow(row + 2, n) && row == 3) { return true; }
+	else if (nInRow(row - 1, n) && nInRow(row + 1, n) && row == 4) { return true; }
+	else if (nInRow(row - 1, n) && nInRow(row - 2, n) && row == 5) { return true; }
+	else if (nInRow(row + 1, n) && nInRow(row + 2, n) && row == 6) { return true; }
+	else if (nInRow(row - 1, n) && nInRow(row + 1, n) && row == 7) { return true; }
+	else if (nInRow(row - 1, n) && nInRow(row - 2, n) && row == 8) { return true; }
+	else {	return false; }
 }
 
 bool BOARD::nInAdjCols(int col, int n) {
 	// row 1 condition
-	if (col == 0) {
-		if (nInCol(col + 1, n) && nInCol(col + 2, n)) { return true; }
-	}
-	else if (col == 1) {
-		if (nInCol(col - 1, n) && nInCol(col + 1, n)) { return true; }
-	}
-	else if (col == 2) {
-		if (nInCol(col - 1, n) && nInCol(col - 2, n)) { return true; }
-	}
-	else if (col == 3) {
-		if (nInCol(col + 1, n) && nInCol(col + 2, n)) { return true; }
-	}
-	else if (col == 4) {
-		if (nInCol(col - 1, n) && nInCol(col + 1, n)) { return true; }
-	}
-	else if (col == 5) {
-		if (nInCol(col - 1, n) && nInCol(col - 2, n)) { return true; }
-	}
-	else if (col == 6) {
-		if (nInCol(col + 1, n) && nInCol(col + 2, n)) { return true; }
-	}
-	else if (col == 7) {
-		if (nInCol(col - 1, n) && nInCol(col + 1, n)) { return true; }
-	}
-	else if (col == 8) {
-		if (nInCol(col - 1, n) && nInCol(col - 2, n)) { return true; }
-	}
-	else {
-		return false;
-	}
-}
-
-BOARD::~BOARD() {
+	if (nInCol(col + 1, n) && nInCol(col + 2, n) && col == 0) { return true; }
+	else if (nInCol(col - 1, n) && nInCol(col + 1, n) && col == 1) { return true; }
+	else if (nInCol(col - 1, n) && nInCol(col - 2, n) && col == 2) { return true; }
+	else if (nInCol(col + 1, n) && nInCol(col + 2, n) && col == 3) { return true; }
+	else if (nInCol(col - 1, n) && nInCol(col + 1, n) && col == 4) { return true; }
+	else if (nInCol(col - 1, n) && nInCol(col - 2, n) && col == 5) { return true; }
+	else if (nInCol(col + 1, n) && nInCol(col + 2, n) && col == 6) { return true; }
+	else if (nInCol(col - 1, n) && nInCol(col + 1, n) && col == 7) { return true; }
+	else if (nInCol(col - 1, n) && nInCol(col - 2, n) && col == 8) { return true; }
+	else {	return false; }
 }

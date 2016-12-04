@@ -34,20 +34,10 @@ int main() {
 	// board is now filled with supposed correct board
 	std::cout << "Solving the below board: " << std::endl;
 	myboard.printBoard();
+
 	myboard.getCellList();
+	myboard.printBoard();
 	//myboard.printCellList();
-
-	// solve board
-	/*
-	while (!myboard.winCase()) {
-		myboard.solveBoard();
-	}
-
-	if (myboard.winCase()) {
-		std::cout << "Below is the solved board: " << std::endl;
-		myboard.printBoard();
-	}
-	*/
 	return 0;
 }
 
